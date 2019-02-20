@@ -1,26 +1,43 @@
-console.log("Here");
+var today = new Date();
 
-var thing = "https://api.nasa.gov/planetary/apod\?api_key\=fWGvSVshJd95FFVtTFPMEbIniRM1UrTULMIOkHvM\&date\=2019-01-12"
+function date_format(today) {
+    var date = "";
+    date += today.getFullYear();
+    date += '-';
+    date += today.getMonth() + 1;
+    date += '-';
+    date += today.getDate();
+    return date;
+}
 
-fetch(thing)
-  .then(function(response) {
-    return response.json();
-  })
-  .then(function(myJson) {
-    ocument.getElementsByTagName('p')[0].innerHTML = "other thinsg"
+function date_subtract() {
+    today.setDate(today.getDate() - 1);
+    return date_format(today);
+}
 
-    // var p = document.createElement('p').innerHTML = "This is some shit";
-    // var e = document.getElementsByClassName('main');
-    // e[0].appendChild(p);
-    
-    document.createElement('img').src = myJson.url;
-    console.log(JSON.stringify(myJson.url));
-    console.log(document.getElementsByName('img'));
-    document.getElementsByTagName('img')[0].src = myJson.url
-    
-  }).catch(function(error) {
-    console.log("Error:", error);
-    
-});
+var url = "https://api.nasa.gov/planetary/apod\?api_key\=fWGvSVshJd95FFVtTFPMEbIniRM1UrTULMIOkHvM\&date\="
 
-console.log("Here 2");
+while(today.getFullYear()  == 2019) {
+    var date = date_format(today);
+
+    fetch(url+date)
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(myJson) {
+        console.log("SDg");
+        
+        console.log(JSON.stringify(myJson));
+        var main = document.getElementById('main');
+        var img = document.createElement('img');
+        img.src = myJson.url;
+        main.appendChild(img);
+        //append instead of replace
+        
+    }).catch(function(error) {
+        console.log("Error:", error);
+        
+    });
+
+    date = date_subtract();
+}
