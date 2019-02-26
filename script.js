@@ -15,7 +15,7 @@ function subtractDate() {
     return formatDate(currentDate);
 }
 
-var url = "https://api.nasa.gov/planetary/apod\?api_key\=fWGvSVshJd95FFVtTFPMEbIniRM1UrTULMIOkHvM\&date\="
+var url = "https://api.nasa.gov/planetary/apod?api_key=fWGvSVshJd95FFVtTFPMEbIniRM1UrTULMIOkHvM&date="
 
 function createCard(asod) {
     var card = document.createElement('div');
