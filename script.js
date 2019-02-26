@@ -1,48 +1,48 @@
-var today = new Date();
+var currentDate = new Date();
 
-function dateFormat(today) {
+function formatDate(currentDate) {
     var date = "";
-    date += today.getFullYear();
+    date += currentDate.getFullYear();
     date += '-';
-    date += today.getMonth() + 1;
+    date += currentDate.getMonth() + 1;
     date += '-';
-    date += today.getDate();
+    date += currentDate.getDate();
     return date;
 }
 
-function dateSubtract() {
-    today.setDate(today.getDate() - 1);
-    return dateFormat(today);
+function subtractDate() {
+    currentDate.setDate(currentDate.getDate() - 1);
+    return formatDate(currentDate);
 }
 
 var url = "https://api.nasa.gov/planetary/apod\?api_key\=fWGvSVshJd95FFVtTFPMEbIniRM1UrTULMIOkHvM\&date\="
 
-function createCard(myJson) {
+function createCard(asod) {
     var card = document.createElement('div');
     card.class = 'card';
     
     var date = document.createElement('p');
-    date.innerHTML = myJson.date;
+    date.innerHTML = asod.date;
     card.appendChild(date);
 
     var img = document.createElement('img');
-    img.src = myJson.url;
+    img.src = asod.url;
     card.appendChild(img);
     
     return card;
 }
 
-while(today.getFullYear()  == 2019) {
-    var date = dateFormat(today);
-
+while(currentDate.getFullYear()  == 2019) {
+    var date = formatDate(currentDate);
+    
     fetch(url+date)
     .then(function(response) {
         return response.json();
     })
-    .then(function(myJson) {
-        console.log(JSON.stringify(myJson));
+    .then(function(asod) {
+        console.log(JSON.stringify(asod));
         var main = document.getElementById('container');
-        main.appendChild(createCard(myJson));
+        main.appendChild(createCard(asod));
         //append instead of replace
         
     }).catch(function(error) {
@@ -50,5 +50,5 @@ while(today.getFullYear()  == 2019) {
         
     });
 
-    date = dateSubtract();
+    date = subtractDate();
 }
