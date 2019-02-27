@@ -1,4 +1,5 @@
 var currentDate = new Date();
+let countPictures = 0;
 
 function formatDate(currentDate) {
     var date = "";
@@ -17,32 +18,40 @@ function subtractDate() {
 
 var url = "https://api.nasa.gov/planetary/apod?api_key=fWGvSVshJd95FFVtTFPMEbIniRM1UrTULMIOkHvM&date="
 
-function createCard(asod) {
-    var card = document.createElement('div');
-    card.class = 'card';
+function createCard( apod) {
+    var card = document.querySelector('.card').cloneNode(true);
     
-    var date = document.createElement('p');
-    date.innerHTML = asod.date;
-    card.appendChild(date);
+    var date = card.querySelector('.text-muted');
+    date.innerHTML =  apod.date;
+    
+    var title = card.querySelector('.card-title');
+    title.innerHTML =  apod.title;
 
-    var img = document.createElement('img');
-    img.src = asod.url;
-    card.appendChild(img);
+    var img = card.querySelector('img');
+    if ( apod.media_type == 'image') {
+        img.src =  apod.url;
+        img.alt =  apod.explanation;
+    }
+    else {
+        img.src =  apod.url;
+        img.alt = "Video";
+    }
+    
     
     return card;
 }
 
-while(currentDate.getFullYear()  == 2019) {
+while(countPictures < 9) {
     var date = formatDate(currentDate);
     
     fetch(url+date)
     .then(function(response) {
         return response.json();
     })
-    .then(function(asod) {
-        console.log(JSON.stringify(asod));
-        var main = document.getElementById('container');
-        main.appendChild(createCard(asod));
+    .then(function( apod) {
+        console.log(JSON.stringify( apod));
+        var album = document.querySelector('.album');
+        album.appendChild(createCard( apod));
         //append instead of replace
         
     }).catch(function(error) {
@@ -50,5 +59,6 @@ while(currentDate.getFullYear()  == 2019) {
         
     });
 
+    countPictures += 1;
     date = subtractDate();
 }
