@@ -1,8 +1,45 @@
- let countPictures = 0;
  const url = "https://api.nasa.gov/planetary/apod?api_key=fWGvSVshJd95FFVtTFPMEbIniRM1UrTULMIOkHvM&date="
  const currentDate = new Date();
- 
- function createCard( apod) {
+
+ start();
+
+function start() {
+    for (i=0; i<9; i++){
+        getCard();
+    }
+    getManyCards();
+}
+
+function getManyCards() {
+    window.onscroll = function() {
+        if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
+            getCard();
+        }
+    };   
+}
+
+function getCard() {
+    
+    let date = formatDate(currentDate);
+    
+    fetch(url+date)
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function( apod) {
+        const album = document.querySelector('.album');
+        album.appendChild(createCard( apod));
+        //append instead of replace
+        
+    }).catch(function(error) {
+        console.log("Error:", error);
+        
+    });
+    
+    date = subtractDate();
+}   
+
+function createCard(apod) {
     const card = document.querySelector('template').content.cloneNode(true);
     
     const date = card.querySelector('.text-muted');
@@ -22,27 +59,6 @@
         console.log(apod);
     }
     return card;
-}
-
-while(countPictures < 9) {
-    let date = formatDate(currentDate);
-    
-    fetch(url+date)
-    .then(function(response) {
-        return response.json();
-    })
-    .then(function( apod) {
-        const album = document.querySelector('.album');
-        album.appendChild(createCard( apod));
-        //append instead of replace
-        
-    }).catch(function(error) {
-        console.log("Error:", error);
-        
-    });
-    
-    countPictures += 1;
-    date = subtractDate();
 }
 
 function formatDate(currentDate) {
