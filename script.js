@@ -1,26 +1,27 @@
- const url = "https://api.nasa.gov/planetary/apod?api_key=fWGvSVshJd95FFVtTFPMEbIniRM1UrTULMIOkHvM&date="
- const currentDate = new Date();
+initialize();
 
- start();
+function initialize() {
+    const currentDate = new Date();
 
-function start() {
     for (i=0; i<9; i++){
-        getCard();
+        getCard(currentDate);
     }
     getManyCards();
 }
 
 function getManyCards() {
     window.onscroll = function() {
+        // detects reaching the bottom of the page
         if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
             getCard();
         }
     };   
 }
 
-function getCard() {
-    
+function getCard(currentDate) {
     let date = formatDate(currentDate);
+    
+    const url = "https://api.nasa.gov/planetary/apod?api_key=fWGvSVshJd95FFVtTFPMEbIniRM1UrTULMIOkHvM&date="
     
     fetch(url+date)
     .then(function(response) {
@@ -29,14 +30,13 @@ function getCard() {
     .then(function( apod) {
         const album = document.querySelector('.album');
         album.appendChild(createCard( apod));
-        //append instead of replace
         
     }).catch(function(error) {
         console.log("Error:", error);
         
     });
     
-    date = subtractDate();
+    date = subtractDate(currentDate);
 }   
 
 function createCard(apod) {
@@ -44,6 +44,7 @@ function createCard(apod) {
     
     const date = card.querySelector('.text-muted');
     date.innerHTML =  apod.date;
+    //TODO: format date to read nicer 
     
     const title = card.querySelector('.card-title');
     title.innerHTML =  apod.title;
@@ -71,7 +72,7 @@ function formatDate(currentDate) {
     return date;
 }
 
-function subtractDate() {
+function subtractDate(currentDate) {
     currentDate.setDate(currentDate.getDate() - 1);
     return formatDate(currentDate);
 }
