@@ -1,19 +1,32 @@
 initialize();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+const setOfCards = [];
 
 function initialize() {
     const currentDate = new Date();
-
     //make this more clear(but how?)
     for (i=0; i<9; i++){
-        getCard(currentDate);
+        getCard(currentDate);        // putManyCards(getCard(currentDate), setOfCards);
     }
     getManyCards(currentDate);
+}     
+
+function putManyCards( card, setOfCards) {
+    setOfCards.push(card);
+    if( setOfCards.length >=6 ){
+        setOfCards.sort();
+        let album = document.querySelector('.album');
+        console.log(setOfCards);
+        album.appendChild(setOfCards.pop());
+    }
 }
 
-function getManyCards(currentDate) {
+function getManyCards(currentDate) {   
+    let setOfCards = [];
     window.onscroll = function() {
         // detects reaching the bottom of the page
-        if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
+        if ((window.innerHeight + window.pageYOffset) 
+            >= document.body.offsetHeight) {
             getCard(currentDate);
         }
     };   
@@ -21,16 +34,17 @@ function getManyCards(currentDate) {
 
 function getCard(currentDate) {
     let date = formatDate(currentDate);
-    const url = "https://api.nasa.gov/planetary/apod?api_key=fWGvSVshJd95FFVtTFPMEbIniRM1UrTULMIOkHvM&date="
+    const url = "https://api.nasa.gov/planetary/apod?api_key=fWGvSVshJd95FFVtTFPMEbIniRM1UrTULMIOkHvM&date=";
     
     fetch(url+date)
     .then(function(response) {
         return response.json();
     })
     .then(function( apod) {
-        const album = document.querySelector('.album');
-        album.appendChild(createCard( apod));
-        
+        //sort cards by date and then display 
+        return createCard(apod);
+    }).then( function(card) {
+        putManyCards(card, setOfCards);
     }).catch(function(error) {
         console.log("Error:", error);
         
