@@ -1,32 +1,45 @@
+// TODO: re-organize order of cards (horizontal not vertical), also change
+//  layout to make it more even
+// TODO: image load needs to be much faster, adds a compression algorithm in there 
+// TODO: hpw to stop that initial no-css load? Why are these things taking so long anyway?
+
 initialize();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+
+//TODO: try and remove this global variable
 const setOfCards = [];
 
 function initialize() {
     const currentDate = new Date();
-    //make this more clear(but how?)
+    //initialize first set of cards
     for (i=0; i<9; i++){
-        getCard(currentDate);        // putManyCards(getCard(currentDate), setOfCards);
-    }
+        getCard(currentDate);        
+    }     
     getManyCards(currentDate);
-}     
+}
 
 function putManyCards( card, setOfCards) {
     setOfCards.push(card);
-    if( setOfCards.length >=6 ){
-        setOfCards.sort();
+    //display six cards at once to not break layout
+    if( setOfCards.length >6 ){
+        //sort cards by date, not order of arrival
+        setOfCards.sort(function(obj1, obj2) {
+            if(obj1.querySelector(".text-muted").innerHTML < obj2.querySelector(".text-muted").innerHTML ) {
+                return -1;
+            }
+            else {
+                return 1;
+            }
+        });
         let album = document.querySelector('.album');
-        console.log(setOfCards);
         album.appendChild(setOfCards.pop());
     }
 }
 
 function getManyCards(currentDate) {   
-    let setOfCards = [];
     window.onscroll = function() {
         // detects reaching the bottom of the page
         if ((window.innerHeight + window.pageYOffset) 
-            >= document.body.offsetHeight) {
+        >= document.body.offsetHeight) {
             getCard(currentDate);
         }
     };   
@@ -41,13 +54,12 @@ function getCard(currentDate) {
         return response.json();
     })
     .then(function( apod) {
-        //sort cards by date and then display 
         return createCard(apod);
     }).then( function(card) {
         putManyCards(card, setOfCards);
+
     }).catch(function(error) {
         console.log("Error:", error);
-        
     });
     
     date = subtractDate(currentDate);
