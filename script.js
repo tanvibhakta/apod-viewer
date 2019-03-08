@@ -39,7 +39,7 @@ function getManyCards(currentDate) {
     window.onscroll = function() {
         // detects reaching the bottom of the page
         if ((window.innerHeight + window.pageYOffset) 
-        >= document.body.offsetHeight) {
+        >= document.body.offsetHeight*0.92) {
             getCard(currentDate);
         }
     };   
