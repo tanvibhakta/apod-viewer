@@ -49,6 +49,8 @@ function getCard(currentDate) {
     let date = formatDate(currentDate);
     const url = "https://api.nasa.gov/planetary/apod?api_key=fWGvSVshJd95FFVtTFPMEbIniRM1UrTULMIOkHvM&date=";
     
+    const url = "https://api.nasa.gov/planetary/apod?api_key=fWGvSVshJd95FFVtTFPMEbIniRM1UrTULMIOkHvM&date="
+    
     fetch(url+date)
     .then(function(response) {
         return response.json();
